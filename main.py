@@ -2,67 +2,63 @@ inventories = []
 
 
 def search_inventory():
-    if inventories:
-        search = input('1 - Search by item name\n2 - Search by description\nEnter: ')
-        if search == '1':
-            item_search = input('Enter name of item: ')
-            for my_dict in inventories:
-                if item_search in my_dict['Item name']:
-                    for key, value in my_dict.items():
-                        print(f'{key}: {value}')
-                else:
-                    print('\nThis item does not exist\n')
-        elif search == '2':
-            description_search = input('Enter description of item: ')
-            for my_dict in inventories:
-                if description_search in my_dict['Description']:
-                    for key, value in my_dict.items():
-                        print(f'{key}: {value}')
-                else:
-                    print('\nThis description does not exist\n')
-        else:
-            print('\nThis option does not exist, try again\n')
-    else:
-        print("\nInventory empty\n")
+    if not inventories:
+        print('\nInventory empty\n')
+        return
+
+    item_search = input('\nSearch by item name or description\nEnter: ')
+    found = False   # Флаг для отслеживания, были ли найдены результаты
+    for my_dict in inventories:
+        if item_search in my_dict['Item name'] or item_search in my_dict['Description']:
+            for key, value in my_dict.items():
+                print(f'{key}: {value}')
+            print('-' * 15)
+            found = True    # Установка флага, если результат найден
+    if not found:   # Проверка флага после цикла
+        print('\nThis item or description does not exist\n')
 
 
 def update_quantity():
-    if inventories:
-        item_for_update = input('Enter name of item to update quantity: ')
-        for my_dict in inventories:
-            if my_dict['Item name'] == item_for_update:
-                new_quantity = int(input('Enter new quantity: '))
-                my_dict['Quantity'] = new_quantity
-                print('\nSuccessful update\n')
-            else:
-                print('\nThis item does not exist\n')
-    else:
-        print("\nInventory empty\n")
+    if not inventories:
+        print('\nInventory empty\n')
+        return
+
+    item_for_update = input('Enter name of item to update quantity: ')
+    found = False
+    for my_dict in inventories:
+        if my_dict['Item name'] == item_for_update:
+            new_quantity = int(input('Enter new quantity: '))
+            my_dict['Quantity'] = new_quantity
+            print('\nSuccessful update\n')
+            found = True
+    if not found:
+        print('\nThis item does not exist\n')
 
 
 def remove_inventory():
-    if inventories:
-        remove = input('Enter name of item to remove: ')
-        for my_dict in inventories:
-            if my_dict['Item name'] == remove:
-                inventories.remove(my_dict)
-                print('\nSuccessful removal\n')
-            else:
-                print('\nThis item does not exist\n')
-    else:
-        print("\nInventory empty\n")
+    if not inventories:
+        print('\nInventory empty\n')
+        return
+
+    remove = input('Enter name of item to remove: ')
+    found = False
+    for my_dict in inventories:
+        if my_dict['Item name'] == remove:
+            inventories.remove(my_dict)
+            print('\nSuccessful removal\n')
+            found = True
+    if not found:
+        print('\nThis item does not exist\n')
 
 
 def view_inventory():
-    output = ""
-    if inventories:
-        for my_dict in inventories:
-            for key, value in my_dict.items():
-                output += f'{key}: {value}\n'
-            output += ('-' * 15 + '\n')
-    else:
-        output = "\nInventory empty\n"
-    print(output)
+    if not inventories:
+        print('\nInventory empty\n')
+        return
+    for my_dict in inventories:
+        for key, value in my_dict.items():
+            print(f'{key}: {value}')
+        print('-' * 15)
 
 
 def add_item():
