@@ -1,6 +1,7 @@
 def str_in_number():
     try:
-        num = int(input('Enter the number: '))
+        num = input('Enter the number: ')
+        num = int(num)
         return f'Thank you, you entered {num}'
     except ValueError:
         return f'Error: Non-numeric value entered.'
