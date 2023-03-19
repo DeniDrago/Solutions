@@ -45,8 +45,6 @@ def update_quantity():
                 break
             except ValueError as e:
                 print("Value Error occurred: ", e)
-            finally:
-                print("update_quantity function execution completed\n")
     else:
         print('\nThis item does not exist\n')
 
@@ -57,12 +55,11 @@ def remove_inventory():
         return
 
     item_name = input('Enter the name of the item to remove: ')
-    for item in inventories:
-        if item['Item name'] == item_name:
-            inventories.remove(item)
-            print('\nSuccessful removal\n')
-            break
-    else:
+    try:
+        item_to_remove = list(filter(lambda x: x['Item name'] == item_name, inventories))[0]
+        inventories.remove(item_to_remove)
+        print('\nSuccessful removal\n')
+    except IndexError:
         print('\nThis item does not exist\n')
 
 
@@ -91,8 +88,6 @@ def add_item():
         print('\nSuccessfully added to inventory\n')
     except ValueError as e:
         print("Value Error occurred: ", e)
-    finally:
-        print("add_item function execution completed\n")
 
 
 def menu():
