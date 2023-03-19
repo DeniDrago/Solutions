@@ -7,15 +7,23 @@ def search_inventory():
         return
 
     item_search = input('\nSearch by item name or description\nEnter: ')
-    found = False   # Флаг для отслеживания, были ли найдены результаты
+    if not item_search:
+        print('\nPlease enter a search term\n')
+        return
+
+    search_results = []
     for my_dict in inventories:
-        if item_search in my_dict['Item name'] or item_search in my_dict['Description']:
-            for key, value in my_dict.items():
+        if item_search.lower() in my_dict['Item name'].lower() \
+                or item_search.lower() in my_dict['Description'].lower():
+            search_results.append(my_dict)
+
+    if not search_results:
+        print('\nThis item or description does not exist\n')
+    else:
+        for result in search_results:
+            for key, value in result.items():
                 print(f'{key}: {value}')
             print('-' * 15)
-            found = True    # Установка флага, если результат найден
-    if not found:   # Проверка флага после цикла
-        print('\nThis item or description does not exist\n')
 
 
 def update_quantity():
@@ -23,15 +31,23 @@ def update_quantity():
         print('\nInventory empty\n')
         return
 
-    item_for_update = input('Enter name of item to update quantity: ')
-    found = False
-    for my_dict in inventories:
-        if my_dict['Item name'] == item_for_update:
-            new_quantity = int(input('Enter new quantity: '))
-            my_dict['Quantity'] = new_quantity
-            print('\nSuccessful update\n')
-            found = True
-    if not found:
+    item_for_update = input('Enter the name of the item to update: ')
+    if not item_for_update:
+        print('\nItem name cannot be empty\n')
+        return
+
+    for item in inventories:
+        if item['Item name'] == item_for_update:
+            try:
+                new_quantity = int(input('Enter new quantity: '))
+                item['Quantity'] = new_quantity
+                print('\nSuccessful update\n')
+                break
+            except ValueError as e:
+                print("Value Error occurred: ", e)
+            finally:
+                print("update_quantity function execution completed\n")
+    else:
         print('\nThis item does not exist\n')
 
 
@@ -40,14 +56,13 @@ def remove_inventory():
         print('\nInventory empty\n')
         return
 
-    remove = input('Enter name of item to remove: ')
-    found = False
-    for my_dict in inventories:
-        if my_dict['Item name'] == remove:
-            inventories.remove(my_dict)
+    item_name = input('Enter the name of the item to remove: ')
+    for item in inventories:
+        if item['Item name'] == item_name:
+            inventories.remove(item)
             print('\nSuccessful removal\n')
-            found = True
-    if not found:
+            break
+    else:
         print('\nThis item does not exist\n')
 
 
@@ -55,23 +70,29 @@ def view_inventory():
     if not inventories:
         print('\nInventory empty\n')
         return
-    for my_dict in inventories:
-        for key, value in my_dict.items():
-            print(f'{key}: {value}')
+
+    for item in inventories:
         print('-' * 15)
+        print('\n'.join([f'{key}: {value}' for key, value in item.items()]))
 
 
 def add_item():
     item_name = input('Name of item: ')
     description = input('Description of item: ')
-    quantity = int(input('Quantity of item: '))
-    inventory = {
-        'Item name': item_name,
-        'Description': description,
-        'Quantity': quantity
-    }
-    inventories.append(inventory)
-    print('\nSuccessfully added to inventory\n')
+
+    try:
+        quantity = int(input('Quantity of item: '))
+        new_item = {
+            'Item name': item_name,
+            'Description': description,
+            'Quantity': quantity
+        }
+        inventories.append(new_item)
+        print('\nSuccessfully added to inventory\n')
+    except ValueError as e:
+        print("Value Error occurred: ", e)
+    finally:
+        print("add_item function execution completed\n")
 
 
 def menu():
@@ -83,24 +104,33 @@ def menu():
     print('q/Q for Quit')
 
     choice = input('\nEnter your choice: ')
+    if not choice:
+        print('\nPlease enter a search term\n')
+        return None
     return choice
 
 
-if __name__ == '__main__':
+def main():
     print('---Inventory System---\n')
     while True:
-        choose_menu = menu()
-        if choose_menu == '1':
+        choice = menu()
+
+        if choice == '1':
             view_inventory()
-        elif choose_menu == '2':
+        elif choice == '2':
             add_item()
-        elif choose_menu == '3':
+        elif choice == '3':
             remove_inventory()
-        elif choose_menu == '4':
+        elif choice == '4':
             update_quantity()
-        elif choose_menu == '5':
+        elif choice == '5':
             search_inventory()
-        elif choose_menu in 'qQ':
+        elif choice and choice in 'qQ':
+            print('Quitting the program')
             break
         else:
-            print('\nThis option does not exist, try again\n')
+            print('\nInvalid choice. Try again.\n')
+
+
+if __name__ == '__main__':
+    main()
