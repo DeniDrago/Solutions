@@ -3,15 +3,14 @@ def handling_multiple_exception():
         filename = input("Enter a file name: ")
         with open(filename, 'r') as file:
             for line in file:
-                try:
-                    num = int(line)
-                    print(num * 2)
-                except ValueError:
-                    print("The file contains non-numeric values!")
+                num = int(line)
+                print(num * 2)
     except FileNotFoundError:
         print("File not found!")
     except PermissionError:
         print("The program does not have permission to access the file!")
+    except ValueError:
+        print("The file contains non-numeric values!")
     finally:
         print("The program has successfully completed its work.")
 
