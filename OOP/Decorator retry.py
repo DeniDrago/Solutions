@@ -7,10 +7,10 @@ def retry(max_retries, exc):
             while retries <= max_retries:
                 try:
                     return func(*args, **kwargs)
-                except exc as e:
+                except Exception as e:
                     retries += 1
                     if retries > max_retries:
-                        return e
+                        raise exc from e
 
         return wrapper
 
