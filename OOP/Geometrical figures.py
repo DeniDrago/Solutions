@@ -7,10 +7,10 @@ class Shape:
         self.color = color
 
     def area(self):
-        pass
+        raise NotImplementedError
 
     def perimeter(self):
-        pass
+        raise NotImplementedError
 
     def __str__(self):
         return f"{self.name}, color: {self.color}"
